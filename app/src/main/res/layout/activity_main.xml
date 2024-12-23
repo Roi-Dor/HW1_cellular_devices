@@ -21,35 +21,35 @@
     <!-- Lives (Heart Icons) -->
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/hearts_layout"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/hearts_set_length"
+        android:layout_height="@dimen/heart_set_hight"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
         >
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/main_IMG_heart1"
-            android:layout_height="40dp"
-            android:layout_width="0dp"
+            android:layout_height="@dimen/heart_hight"
+            android:layout_width="@dimen/heart_width"
             android:layout_weight="1"
             app:srcCompat="@drawable/heart"
             />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/main_IMG_heart2"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/heart_width"
+            android:layout_height="@dimen/heart_hight"
             android:layout_marginHorizontal="10dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/heart" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/main_IMG_heart3"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/heart_width"
+            android:layout_height="@dimen/heart_hight"
             android:layout_weight="1"
             app:srcCompat="@drawable/heart" />
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -63,15 +63,15 @@
         android:layout_above="@id/buttons_layout"
         android:rowCount="6"
         android:columnCount="3"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp">
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin">
 
         <!-- Obstacles -->
         <!-- row 0 -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_0_0"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="0"
             android:layout_column="0"
             android:layout_rowWeight="1"
@@ -81,8 +81,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_0_1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="0"
             android:layout_column="1"
             android:layout_rowWeight="1"
@@ -92,8 +92,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_0_2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="0"
             android:layout_column="2"
             android:layout_rowWeight="1"
@@ -104,8 +104,8 @@
         <!-- row 1 -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_1_0"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="1"
             android:layout_column="0"
             android:layout_rowWeight="1"
@@ -115,8 +115,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_1_1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="1"
             android:layout_column="1"
             android:layout_rowWeight="1"
@@ -126,8 +126,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_1_2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="1"
             android:layout_column="2"
             android:layout_rowWeight="1"
@@ -138,8 +138,8 @@
         <!-- row 2 -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_2_0"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="2"
             android:layout_column="0"
             android:layout_rowWeight="1"
@@ -149,8 +149,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_2_1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="2"
             android:layout_column="1"
             android:layout_rowWeight="1"
@@ -160,8 +160,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_2_2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="2"
             android:layout_column="2"
             android:layout_rowWeight="1"
@@ -172,8 +172,8 @@
         <!-- row 3 -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_3_0"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="3"
             android:layout_column="0"
             android:layout_rowWeight="1"
@@ -183,8 +183,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_3_1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="3"
             android:layout_column="1"
             android:layout_rowWeight="1"
@@ -194,8 +194,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_3_2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="3"
             android:layout_column="2"
             android:layout_rowWeight="1"
@@ -206,8 +206,8 @@
         <!-- row 4 -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_4_0"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="4"
             android:layout_column="0"
             android:layout_rowWeight="1"
@@ -217,8 +217,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_4_1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="4"
             android:layout_column="1"
             android:layout_rowWeight="1"
@@ -228,8 +228,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_4_2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="4"
             android:layout_column="2"
             android:layout_rowWeight="1"
@@ -240,8 +240,8 @@
         <!-- row 5 -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_5_0"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="5"
             android:layout_column="0"
             android:layout_rowWeight="1"
@@ -251,8 +251,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_5_1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="5"
             android:layout_column="1"
             android:layout_rowWeight="1"
@@ -262,8 +262,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_5_2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
             android:layout_row="5"
             android:layout_column="2"
             android:layout_rowWeight="1"
@@ -275,8 +275,8 @@
         <!-- Player (Newton's face in the bottom row) -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/player_cell_5_0"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/player_width"
+            android:layout_height="@dimen/player_height"
             android:layout_row="5"
             android:layout_column="0"
             android:layout_rowWeight="1"
@@ -286,8 +286,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/player_cell_5_1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/player_width"
+            android:layout_height="@dimen/player_height"
             android:layout_row="5"
             android:layout_column="1"
             android:layout_rowWeight="1"
@@ -296,8 +296,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/player_cell_5_2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/player_width"
+            android:layout_height="@dimen/player_height"
             android:layout_row="5"
             android:layout_column="2"
             android:layout_rowWeight="1"
@@ -312,7 +312,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="25dp"
+        android:layout_margin="@dimen/default_margin"
         >
 
         <com.google.android.material.button.MaterialButton
@@ -325,8 +325,8 @@
             />
 
         <View
-            android:layout_width="200dp"
-            android:layout_height="0dp" />
+            android:layout_width="@dimen/buttons_spacing"
+            android:layout_height="@dimen/buttons_height" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/main_BTN_right"

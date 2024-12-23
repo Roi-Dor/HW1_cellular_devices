@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="hearts_set_length">140dp</dimen>
+    <dimen name="heart_set_hight">40dp</dimen>
+    <dimen name="default_margin">16dp</dimen>
+    <dimen name="heart_hight">40dp</dimen>
+    <dimen name="heart_width">0dp</dimen>
+    <dimen name="apple_width">0dp</dimen>
+    <dimen name="apple_height">0dp</dimen>
+    <dimen name="player_width">0dp</dimen>
+    <dimen name="player_height">0dp</dimen>
+    <dimen name="buttons_spacing">200dp</dimen>
+    <dimen name="buttons_height">0dp</dimen>
+</resources>

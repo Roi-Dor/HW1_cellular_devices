@@ -10,40 +10,55 @@ import com.google.android.material.button.MaterialButton
 
 class PreGameActivity : AppCompatActivity() {
 
-
     private var selectedDifficulty: Long? = null // Store the selected difficulty
+    private var selectedControl: String? = null // Store the selected control option
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pre_game)
 
-        val startGameButton = findViewById<MaterialButton>(R.id.start_game_button)
+        val startGameButton = findViewById<MaterialButton>(R.id.pre_BTN_start)
 
-        // Set click listeners for the difficulty buttons
-        findViewById<MaterialButton>(R.id.easy_button).setOnClickListener {
+        // Difficulty selection
+        findViewById<MaterialButton>(R.id.pre_BTN_easy).setOnClickListener {
             selectedDifficulty = 1200L
-            startGameButton.isEnabled = true // Enable start game button
+            checkSelections(startGameButton)
         }
 
-        findViewById<MaterialButton>(R.id.medium_button).setOnClickListener {
+        findViewById<MaterialButton>(R.id.pre_BTN_medium).setOnClickListener {
             selectedDifficulty = 800L
-            startGameButton.isEnabled = true // Enable start game button
+            checkSelections(startGameButton)
         }
 
-        findViewById<MaterialButton>(R.id.hard_button).setOnClickListener {
+        findViewById<MaterialButton>(R.id.pre_BTN_hard).setOnClickListener {
             selectedDifficulty = 400L
-            startGameButton.isEnabled = true // Enable start game button
+            checkSelections(startGameButton)
         }
 
-        // Set click listener for the start game button
-        startGameButton.setOnClickListener {
-            selectedDifficulty?.let { difficulty ->
-                val intent = Intent(this, MainActivity::class.java)
-                val bundle = Bundle()
-                bundle.putLong("REFRESH_RATE", difficulty) // Pass the selected difficulty
-                intent.putExtras(bundle)
-                startActivity(intent)
-            }
+        // Control selection
+        findViewById<MaterialButton>(R.id.pre_BTN_buttonControl).setOnClickListener {
+            selectedControl = "BUTTONS"
+            checkSelections(startGameButton)
         }
+
+        findViewById<MaterialButton>(R.id.pre_BTN_tiltControl).setOnClickListener {
+            selectedControl = "TILT"
+            checkSelections(startGameButton)
+        }
+
+        // Start game
+        startGameButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            val bundle = Bundle()
+            selectedDifficulty?.let { bundle.putLong("REFRESH_RATE", it) }
+            selectedControl?.let { bundle.putString("CONTROL_TYPE", it) }
+            intent.putExtras(bundle)
+            startActivity(intent)
+        }
+    }
+
+    // Enable "Start Game" button only when both options are selected
+    private fun checkSelections(startGameButton: MaterialButton) {
+        startGameButton.isEnabled = selectedDifficulty != null && selectedControl != null
     }
 }

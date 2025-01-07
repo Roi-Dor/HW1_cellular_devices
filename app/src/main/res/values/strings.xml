@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">HW1_2.0</string>
+    <string name="start_game">Start Game</string>
+    <string name="tilt_control">Tilt Controls</string>
+    <string name="buttons_controls">Buttons Controls</string>
+    <string name="select_control_option">Select Control Option</string>
+    <string name="hard">Hard</string>
+    <string name="medium">Medium</string>
+    <string name="easy">Easy</string>
+    <string name="select_difficulty">Select Difficulty</string>
 </resources>

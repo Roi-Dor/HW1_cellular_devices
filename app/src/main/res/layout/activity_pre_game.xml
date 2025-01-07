@@ -7,51 +7,108 @@
     android:layout_height="match_parent"
     tools:context=".PreGameActivity">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="@dimen/default_padding">
+
         <TextView
-            android:id="@+id/pre_game_title"
+            android:id="@+id/pre_LBL_difficuly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Difficulty"
-            android:textSize="24sp"
+            android:text="@string/select_difficulty"
+            android:textSize="@dimen/menu_size"
             android:textStyle="bold"
-            android:layout_marginBottom="32dp" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/double_default"/>
 
+        <!-- Easy Button -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/easy_button"
+            android:id="@+id/pre_BTN_easy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Easy"
-            android:layout_marginBottom="16dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/medium_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Medium"
-            android:layout_marginBottom="16dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/hard_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hard" />
-
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/start_game_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Start Game"
-            android:enabled="false"
+            android:text="@string/easy"
+            app:layout_constraintTop_toBottomOf="@id/pre_LBL_difficuly"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
             />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Medium Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/pre_BTN_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/medium"
+            app:layout_constraintTop_toBottomOf="@id/pre_BTN_easy"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="@dimen/default_margin" />
+
+        <!-- Hard Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/pre_BTN_hard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hard"
+            app:layout_constraintTop_toBottomOf="@id/pre_BTN_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="@dimen/default_margin" />
+
+        <TextView
+            android:id="@+id/pre_LBL_movingOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_control_option"
+            android:textSize="@dimen/menu_size"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/pre_BTN_hard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/pre_BTN_movmentOption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/pre_LBL_movingOption"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/pre_BTN_buttonControl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buttons_controls"
+            android:layout_marginEnd="@dimen/default_margin" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/pre_BTN_tiltControl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tilt_control" />
+    </LinearLayout>
+
+
+    <!-- Start Game Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/pre_BTN_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_game"
+            android:enabled="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="@dimen/default_margin" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+

@@ -11,5 +11,7 @@
     <dimen name="player_height">0dp</dimen>
     <dimen name="buttons_spacing">200dp</dimen>
     <dimen name="buttons_height">0dp</dimen>
-    <dimen name="default_padding">16dp</dimen>
+    <dimen name="menu_padding">100dp</dimen>
+    <dimen name="menu_size">24sp</dimen>
+    <dimen name="double_default">32dp</dimen>
 </resources>

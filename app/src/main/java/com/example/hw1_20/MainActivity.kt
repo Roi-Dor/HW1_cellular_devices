@@ -20,16 +20,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var gridLayout: GridLayout
     private lateinit var playerCells: List<AppCompatImageView>
     private lateinit var obstacleCells: Array<Array<AppCompatImageView>>
+    private var maxCol = 5
+    private var maxRow = 9
 
     // Game state
-    private var currentPlayerPosition = 1 // Player starts in the middle cell of the bottom row
+    private var currentPlayerPosition = 2 // Player starts in the middle cell of the bottom row
     private var score = 0
     private var lives = 3
     private var gameRunning = false
 
     // Game loop handler
     private val handler = Handler(Looper.getMainLooper())
-    private val refreshRate = 1000L // Refresh every second
+    private var refreshRate = 1000L // default Refresh rate
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -48,6 +50,9 @@ class MainActivity : AppCompatActivity() {
             movePlayer("RIGHT")
         }
 
+        // Retrieve the refresh rate from the bundle
+        refreshRate = intent.extras?.getLong("REFRESH_RATE", 1000L) ?: 1000L
+
         // Start the game loop
         startGameLoop()
     }
@@ -57,22 +62,25 @@ class MainActivity : AppCompatActivity() {
             // Find the grid layout
             gridLayout = findViewById(R.id.grid_layout)
 
-            val rows = 6
-            val columns = 3
+
 
             // Initialize player cells in the bottom row
             playerCells = listOf(
-                findViewById<AppCompatImageView>(R.id.player_cell_5_0)
+                findViewById<AppCompatImageView>(R.id.player_cell_8_0)
                     ?: throw RuntimeException("Player cell R.id.player_cell_5_0 not found"),
-                findViewById<AppCompatImageView>(R.id.player_cell_5_1)
+                findViewById<AppCompatImageView>(R.id.player_cell_8_1)
                     ?: throw RuntimeException("Player cell R.id.player_cell_5_1 not found"),
-                findViewById<AppCompatImageView>(R.id.player_cell_5_2)
-                    ?: throw RuntimeException("Player cell R.id.player_cell_5_2 not found")
+                findViewById<AppCompatImageView>(R.id.player_cell_8_2)
+                    ?: throw RuntimeException("Player cell R.id.player_cell_5_2 not found"),
+                findViewById<AppCompatImageView>(R.id.player_cell_8_3)
+                    ?: throw RuntimeException("Player cell R.id.player_cell_5_3 not found"),
+                findViewById<AppCompatImageView>(R.id.player_cell_8_4)
+                    ?: throw RuntimeException("Player cell R.id.player_cell_5_4 not found")
             )
 
             // Initialize obstacle cells
-            obstacleCells = Array(rows) { row ->
-                Array(columns) { column ->
+            obstacleCells = Array(maxRow) { row ->
+                Array(maxCol) { column ->
                     val cellId = resources.getIdentifier("cell_${row}_${column}", "id", packageName)
                     if (cellId == 0) {
                         throw RuntimeException("Cell ID for cell_${row}_${column} not found")
@@ -91,7 +99,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun resetGame() {
         // Reset player position
-        currentPlayerPosition = 1
+        currentPlayerPosition = 2
         playerCells.forEachIndexed { index, AppCompatImageView ->
             AppCompatImageView.visibility = if (index == currentPlayerPosition) View.VISIBLE else View.INVISIBLE
         }
@@ -110,7 +118,7 @@ class MainActivity : AppCompatActivity() {
             playerCells[currentPlayerPosition].visibility = View.INVISIBLE
             currentPlayerPosition--
             playerCells[currentPlayerPosition].visibility = View.VISIBLE
-        } else if (direction == "RIGHT" && currentPlayerPosition < 2) {
+        } else if (direction == "RIGHT" && currentPlayerPosition < maxCol-1) {
             playerCells[currentPlayerPosition].visibility = View.INVISIBLE
             currentPlayerPosition++
             playerCells[currentPlayerPosition].visibility = View.VISIBLE
@@ -123,15 +131,15 @@ class MainActivity : AppCompatActivity() {
         if (obstacleRefreshCount < 1) {
             obstacleRefreshCount+=1
         }else {
-            val randomColumn = (0..2).random()
+            val randomColumn = (0..maxCol-1).random()
             obstacleCells[topRow][randomColumn].visibility = View.VISIBLE
             obstacleRefreshCount=0
         }
     }
 
     private fun moveObstacles() {
-        for (row in 4 downTo 0) { // Start from the second-to-last row
-            for (column in 0..2) {
+        for (row in maxRow-2 downTo 0) { // Start from the second-to-last row
+            for (column in 0..maxCol-1) {
                 val currentCell = obstacleCells[row][column]
                 val nextCell = obstacleCells[row + 1][column]
 
@@ -143,16 +151,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun clearBottom(){
-        for (column in 0..2) {
-            if (obstacleCells[5][column].visibility == View.VISIBLE) {
-                obstacleCells[5][column].visibility = View.INVISIBLE
+        for (column in 0..maxCol-1) {
+            if (obstacleCells[maxRow-1][column].visibility == View.VISIBLE) {
+                obstacleCells[maxRow-1][column].visibility = View.INVISIBLE
             }
         }
     }
 
     private fun checkCollision() {
         // Check if an obstacle is in the same column as the player
-        if (obstacleCells[5][currentPlayerPosition].visibility == View.VISIBLE) {
+        if (obstacleCells[maxRow-1][currentPlayerPosition].visibility == View.VISIBLE) {
             // Collision detected
             lives--
             updateLives()

@@ -61,8 +61,8 @@
         android:layout_height="0dp"
         android:layout_below="@id/hearts_layout"
         android:layout_above="@id/buttons_layout"
-        android:rowCount="6"
-        android:columnCount="3"
+        android:rowCount="9"
+        android:columnCount="5"
         android:layout_marginTop="@dimen/default_margin"
         android:layout_marginBottom="@dimen/default_margin">
 
@@ -96,6 +96,28 @@
             android:layout_height="@dimen/apple_height"
             android:layout_row="0"
             android:layout_column="2"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_0_3"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="0"
+            android:layout_column="3"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_0_4"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="0"
+            android:layout_column="4"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:src="@drawable/apple"
@@ -135,6 +157,28 @@
             android:src="@drawable/apple"
             android:visibility="invisible" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_1_3"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="1"
+            android:layout_column="3"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_1_4"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="1"
+            android:layout_column="4"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
         <!-- row 2 -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_2_0"
@@ -164,6 +208,28 @@
             android:layout_height="@dimen/apple_height"
             android:layout_row="2"
             android:layout_column="2"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_2_3"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="2"
+            android:layout_column="3"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_2_4"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="2"
+            android:layout_column="4"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:src="@drawable/apple"
@@ -203,6 +269,28 @@
             android:src="@drawable/apple"
             android:visibility="invisible" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_3_3"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="3"
+            android:layout_column="3"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_3_4"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="3"
+            android:layout_column="4"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
         <!-- row 4 -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cell_4_0"
@@ -232,6 +320,28 @@
             android:layout_height="@dimen/apple_height"
             android:layout_row="4"
             android:layout_column="2"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_4_3"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="4"
+            android:layout_column="3"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_4_4"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="4"
+            android:layout_column="4"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:src="@drawable/apple"
@@ -271,13 +381,205 @@
             android:src="@drawable/apple"
             android:visibility="invisible" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_5_3"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="5"
+            android:layout_column="3"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_5_4"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="5"
+            android:layout_column="4"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <!-- row 6 -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_6_0"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="6"
+            android:layout_column="0"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_6_1"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="6"
+            android:layout_column="1"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_6_2"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="6"
+            android:layout_column="2"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_6_3"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="6"
+            android:layout_column="3"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_6_4"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="6"
+            android:layout_column="4"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+
+        <!-- row 7 -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_7_0"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="7"
+            android:layout_column="0"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_7_1"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="7"
+            android:layout_column="1"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_7_2"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="7"
+            android:layout_column="2"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_7_3"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="7"
+            android:layout_column="3"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_7_4"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="7"
+            android:layout_column="4"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <!-- row 8 -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_8_0"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="8"
+            android:layout_column="0"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_8_1"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="8"
+            android:layout_column="1"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_8_2"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="8"
+            android:layout_column="2"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_8_3"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="8"
+            android:layout_column="3"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cell_8_4"
+            android:layout_width="@dimen/apple_width"
+            android:layout_height="@dimen/apple_height"
+            android:layout_row="5"
+            android:layout_column="4"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/apple"
+            android:visibility="invisible" />
+
+
 
         <!-- Player (Newton's face in the bottom row) -->
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/player_cell_5_0"
+            android:id="@+id/player_cell_8_0"
             android:layout_width="@dimen/player_width"
             android:layout_height="@dimen/player_height"
-            android:layout_row="5"
+            android:layout_row="8"
             android:layout_column="0"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
@@ -285,21 +587,44 @@
             android:visibility="invisible" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/player_cell_5_1"
+            android:id="@+id/player_cell_8_1"
             android:layout_width="@dimen/player_width"
             android:layout_height="@dimen/player_height"
-            android:layout_row="5"
+            android:layout_row="8"
             android:layout_column="1"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
+            android:visibility="invisible"
             android:src="@drawable/isaac_newton" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/player_cell_5_2"
+            android:id="@+id/player_cell_8_2"
             android:layout_width="@dimen/player_width"
             android:layout_height="@dimen/player_height"
-            android:layout_row="5"
+            android:layout_row="8"
             android:layout_column="2"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:src="@drawable/isaac_newton"
+            android:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/player_cell_8_3"
+            android:layout_width="@dimen/player_width"
+            android:layout_height="@dimen/player_height"
+            android:layout_row="8"
+            android:layout_column="3"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:visibility="invisible"
+            android:src="@drawable/isaac_newton" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/player_cell_8_4"
+            android:layout_width="@dimen/player_width"
+            android:layout_height="@dimen/player_height"
+            android:layout_row="8"
+            android:layout_column="4"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:src="@drawable/isaac_newton"

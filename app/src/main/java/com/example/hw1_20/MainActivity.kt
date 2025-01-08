@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity(), TiltCallback {
     private lateinit var gridLayout: GridLayout
     private lateinit var playerCells: List<AppCompatImageView>
     private lateinit var obstacleCells: Array<Array<AppCompatImageView>>
+    private lateinit var prizesCells: Array<Array<AppCompatImageView>>
 
     // Game State
     private var currentPlayerPosition = 2
@@ -74,8 +75,16 @@ class MainActivity : AppCompatActivity(), TiltCallback {
         // Initialize obstacle cells
         obstacleCells = Array(maxRow) { row ->
             Array(maxCol) { col ->
-                val id = resources.getIdentifier("cell_${row}_${col}", "id", packageName)
-                findViewById(id) ?: throw RuntimeException("Cell ID for cell_${row}_${col} not found")
+                val idOBS = resources.getIdentifier("cell_OBS_${row}_${col}", "id", packageName)
+                findViewById(idOBS) ?: throw RuntimeException("OBS Cell ID for cell_${row}_${col} not found")
+            }
+        }
+
+        // Initialize prizes cells
+        prizesCells = Array(maxRow) { row ->
+            Array(maxCol) { col ->
+                val idPRZ = resources.getIdentifier("cell_PRZ_${row}_${col}", "id", packageName)
+                findViewById(idPRZ) ?: throw RuntimeException("OBS Cell ID for cell_${row}_${col} not found")
             }
         }
     }
@@ -132,12 +141,14 @@ class MainActivity : AppCompatActivity(), TiltCallback {
                         obstacleRefreshCount++
                     } else {
                         generateObstacles()
+                        generatePrizes()
                         obstacleRefreshCount = 0
                     }
                     moveObstacles()
+                    movePrizes()
                     checkCollision()
-                    clearBottom()
                     updateScore()
+                    clearBottom()
                     handler.postDelayed(this, refreshRate)
                 }
             }
@@ -177,11 +188,35 @@ class MainActivity : AppCompatActivity(), TiltCallback {
         obstacleCells[topRow][randomColumn].visibility = View.VISIBLE
     }
 
+    private fun generatePrizes() {
+        val topRow = 0
+        var randomColumn = (0 until maxCol).random()
+        // Can not have an obstacle and a prize on the same cell
+        while(obstacleCells[topRow][randomColumn].visibility == View.VISIBLE){
+            randomColumn = (0 until maxCol).random()
+        }
+        obstacleCells[topRow][randomColumn].visibility = View.VISIBLE
+    }
+
     private fun moveObstacles() {
         for (row in maxRow - 2 downTo 0) {
             for (col in 0 until maxCol) {
                 val currentCell = obstacleCells[row][col]
                 val belowCell = obstacleCells[row + 1][col]
+
+                if (currentCell.visibility == View.VISIBLE) {
+                    currentCell.visibility = View.INVISIBLE
+                    belowCell.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+    private fun movePrizes() {
+        for (row in maxRow - 2 downTo 0) {
+            for (col in 0 until maxCol) {
+                val currentCell = prizesCells[row][col]
+                val belowCell = prizesCells[row + 1][col]
 
                 if (currentCell.visibility == View.VISIBLE) {
                     currentCell.visibility = View.INVISIBLE
@@ -216,7 +251,9 @@ class MainActivity : AppCompatActivity(), TiltCallback {
     }
 
     private fun updateScore() {
-        score++
+        if (obstacleCells[maxRow - 1][currentPlayerPosition].visibility == View.VISIBLE) {
+            score++
+        }
     }
 
     private fun playCrashEffect() {

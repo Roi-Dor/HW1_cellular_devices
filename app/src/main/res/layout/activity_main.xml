@@ -20,7 +20,7 @@
 
     <!-- Lives (Heart Icons) -->
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/hearts_layout"
+        android:id="@+id/main_LBL_hearts"
         android:layout_width="@dimen/hearts_set_length"
         android:layout_height="@dimen/heart_set_hight"
         android:layout_alignParentTop="true"
@@ -54,12 +54,47 @@
             app:srcCompat="@drawable/heart" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <!--Score -->
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/main_LBL_score"
+        android:layout_width="@dimen/hearts_set_length"
+        android:layout_height="@dimen/heart_set_hight"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        >
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/main_IMG_score_preview"
+            android:layout_width="@dimen/preview_size"
+            android:layout_height="@dimen/preview_size"
+            android:src="@drawable/prize"
+             />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/main_LBL_score_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/half_default_margin"
+            android:textSize="@dimen/score_size"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:text="@string/score"
+            />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
     <!-- Grid for Obstacles and Player -->
     <GridLayout
         android:id="@+id/grid_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@id/hearts_layout"
+        android:layout_below="@id/main_LBL_hearts"
         android:layout_above="@id/buttons_layout"
         android:rowCount="9"
         android:columnCount="5"

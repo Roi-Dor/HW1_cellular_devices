@@ -1,12 +1,15 @@
 package com.example.hw1_20
 
+import android.content.Intent
 import android.os.*
+import android.provider.SyncStateContract
 import android.view.View
 import android.widget.GridLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textview.MaterialTextView
 
 class MainActivity : AppCompatActivity(), TiltCallback {
 
@@ -23,6 +26,7 @@ class MainActivity : AppCompatActivity(), TiltCallback {
     // Game State
     private var currentPlayerPosition = 2
     private var score = 0
+    private lateinit var main_LBL_score_text: MaterialTextView
     private var lives = 3
     private var gameRunning = false
     private var refreshRate = 1000L
@@ -98,11 +102,18 @@ class MainActivity : AppCompatActivity(), TiltCallback {
 
         // Reset obstacles
         obstacleCells.flatten().forEach { it.visibility = View.INVISIBLE }
+        prizesCells.flatten().forEach { it.visibility = View.INVISIBLE }
 
         // Reset score and lives
         score = 0
         lives = 3
         updateLives()
+        initscore()
+    }
+
+
+    private fun initscore(){
+        main_LBL_score_text = findViewById(R.id.main_LBL_score_text)
     }
 
     private fun setupButtonControl() {
@@ -175,11 +186,13 @@ class MainActivity : AppCompatActivity(), TiltCallback {
 
     private fun endGame() {
         onPause()
-        Toast.makeText(this, "Game Over! Score: $score", Toast.LENGTH_LONG).show()
-        handler.postDelayed({
-            resetGame()
-            startGameLoop()
-        }, 5000)
+        // Create an intent to start the GameOverActivity
+        val intent = Intent(this, GameOverActivity::class.java)
+        intent.putExtra("SCORE", score) // Pass the score to the GameOverActivity
+        startActivity(intent)
+
+        // Finish the current activity to prevent returning to it
+        finish()
     }
 
     private fun generateObstacles() {
@@ -195,7 +208,7 @@ class MainActivity : AppCompatActivity(), TiltCallback {
         while(obstacleCells[topRow][randomColumn].visibility == View.VISIBLE){
             randomColumn = (0 until maxCol).random()
         }
-        obstacleCells[topRow][randomColumn].visibility = View.VISIBLE
+        prizesCells[topRow][randomColumn].visibility = View.VISIBLE
     }
 
     private fun moveObstacles() {
@@ -237,6 +250,7 @@ class MainActivity : AppCompatActivity(), TiltCallback {
 
     private fun clearBottom() {
         obstacleCells[maxRow - 1].forEach { it.visibility = View.INVISIBLE }
+        prizesCells[maxRow - 1].forEach { it.visibility = View.INVISIBLE }
     }
 
     private fun updateLives() {
@@ -251,8 +265,9 @@ class MainActivity : AppCompatActivity(), TiltCallback {
     }
 
     private fun updateScore() {
-        if (obstacleCells[maxRow - 1][currentPlayerPosition].visibility == View.VISIBLE) {
+        if (prizesCells[maxRow - 1][currentPlayerPosition].visibility == View.VISIBLE) {
             score++
+            main_LBL_score_text.text = score.toString()
         }
     }
 
@@ -267,4 +282,5 @@ class MainActivity : AppCompatActivity(), TiltCallback {
         vibrator.vibrate(vibrationEffect)
         Toast.makeText(this, "Crash!", Toast.LENGTH_SHORT).show()
     }
+
 }

@@ -1,13 +1,14 @@
 package com.example.hw1_20
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.*
-import android.provider.SyncStateContract
 import android.view.View
 import android.widget.GridLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
+import callbacks.TiltCallback
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 
@@ -40,9 +41,15 @@ class MainActivity : AppCompatActivity(), TiltCallback {
     private var obstacleRefreshCount = 0
     private var isPaused = false
 
+    //sound
+    private lateinit var hitSoundPlayer: MediaPlayer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Initialize the sound effect
+        hitSoundPlayer = MediaPlayer.create(this, R.raw.getting_hit)
 
         initializeGrid()
         resetGame()
@@ -64,6 +71,9 @@ class MainActivity : AppCompatActivity(), TiltCallback {
         super.onDestroy()
         if (isTiltControlEnabled) {
             tiltDetector.stop()
+        }
+        if (::hitSoundPlayer.isInitialized) {
+            hitSoundPlayer.release()
         }
     }
 
@@ -272,6 +282,9 @@ class MainActivity : AppCompatActivity(), TiltCallback {
     }
 
     private fun playCrashEffect() {
+        if (::hitSoundPlayer.isInitialized) {
+            hitSoundPlayer.start() // Play the sound effect
+        }
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             (getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
         } else {
@@ -280,7 +293,8 @@ class MainActivity : AppCompatActivity(), TiltCallback {
         }
         val vibrationEffect = VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)
         vibrator.vibrate(vibrationEffect)
-        Toast.makeText(this, "Crash!", Toast.LENGTH_SHORT).show()
+
+
     }
 
 }

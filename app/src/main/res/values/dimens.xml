@@ -17,4 +17,6 @@
     <dimen name="score_size">30sp</dimen>
     <dimen name="preview_size">40dp</dimen>
     <dimen name="half_default_margin">8dp</dimen>
+    <dimen name="quadruple_default_margin">64dp</dimen>
+    <dimen name="menu_margin">50dp</dimen>
 </resources>

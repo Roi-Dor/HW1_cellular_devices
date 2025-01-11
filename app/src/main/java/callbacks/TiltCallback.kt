@@ -1,4 +1,4 @@
-package com.example.hw1_20
+package callbacks
 
 interface TiltCallback {
     fun tiltX(direction: String) // Passes "LEFT" or "RIGHT" for horizontal movement

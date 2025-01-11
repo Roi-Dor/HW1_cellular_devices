@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/default_margin">
+    android:padding="@dimen/default_margin"
+    android:background="@color/blue">
 
     <!-- Game Over Message -->
     <TextView
@@ -13,9 +14,10 @@
         android:textSize="@dimen/menu_size"
         android:textStyle="bold"
         android:gravity="center"
+        android:textColor="@color/black"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/double_default"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginTop="@dimen/double_default"
          />
 
     <!-- Play Again Button -->

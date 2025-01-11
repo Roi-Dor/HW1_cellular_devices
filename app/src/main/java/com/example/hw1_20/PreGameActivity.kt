@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
@@ -45,6 +46,8 @@ class PreGameActivity : AppCompatActivity() {
             selectedControl = "TILT"
             checkSelections(startGameButton)
         }
+
+        findViewById<AppCompatImageView>(R.id.pre_IMG_background_tree)
 
         // Start game
         startGameButton.setOnClickListener {

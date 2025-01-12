@@ -9,4 +9,6 @@
     <string name="easy">Easy</string>
     <string name="select_difficulty">Select Difficulty</string>
     <string name="score">0</string>
+    <string name="top_scores">Top Scores:</string>
+    <string name="records_location">Records Location</string>
 </resources>

@@ -20,6 +20,22 @@
         android:layout_marginTop="@dimen/double_default"
          />
 
+    <!-- Fragment Container -->
+    <FrameLayout
+        android:id="@+id/game_over_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/post_LBL_gameOver"
+        android:layout_marginTop="@dimen/half_default_margin" />
+
+    <!-- Map Fragment Container -->
+    <FrameLayout
+        android:id="@+id/map_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/game_over_fragment_container"
+        android:layout_marginTop="@dimen/half_default_margin" />
+
     <!-- Play Again Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/post_BTN_play_again"

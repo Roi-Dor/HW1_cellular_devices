@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
+import fragments.MapFragment
 
 class GameOverActivity : AppCompatActivity() {
 
@@ -15,9 +16,21 @@ class GameOverActivity : AppCompatActivity() {
         // Retrieve the score from the bundle
         val score = intent.extras?.getInt("SCORE") ?: 0
 
+        saveScore(score)
+
         // Display the score
         val gameOverMessage = findViewById<TextView>(R.id.post_LBL_gameOver)
         gameOverMessage.text = "Game Over\nYour Score: $score"
+
+        // Add the top_score fragment
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.game_over_fragment_container, fragments.scoresList())
+            .commit()
+
+        // Add the MapFragment
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.map_fragment_container, MapFragment())
+            .commit()
 
         // Set up the "Play Again" button
         val playAgainButton = findViewById<MaterialButton>(R.id.post_BTN_play_again)
@@ -45,4 +58,37 @@ class GameOverActivity : AppCompatActivity() {
             finish() // Close GameOverActivity
         }
     }
+
+    private fun saveScore(score: Int) {
+        val sharedPreferences = getSharedPreferences("GameScores", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        // Retrieve existing scores and parse them into a list
+        val scores = sharedPreferences.getString("scores", "") ?: ""
+        val scoreList = if (scores.isNotEmpty()) {
+            scores.split(",").map { it.toInt() }
+        } else {
+            emptyList()
+        }
+
+        // Add the new score and sort the list in descending order
+        val updatedScores = (scoreList + score).sortedDescending().take(10) // Keep only top 10 scores
+
+        // Save the updated scores back to SharedPreferences
+        editor.putString("scores", updatedScores.joinToString(","))
+        editor.apply()
+    }
+
+
+    private fun getScores(): List<Int> {
+        val sharedPreferences = getSharedPreferences("GameScores", MODE_PRIVATE)
+        val scores = sharedPreferences.getString("scores", "") ?: ""
+        return if (scores.isNotEmpty()) {
+            scores.split(",").map { it.toInt() }.sortedDescending().take(10) // Limit to top 10
+        } else {
+            emptyList()
+        }
+    }
+
+
 }

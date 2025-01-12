@@ -5,9 +5,10 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import callbacks.TiltCallback
 import kotlin.math.abs
 
-class TiltDetector(context: Context, private val tiltCallback: MainActivity) {
+class TiltDetector(context: Context, private val tiltCallback: TiltCallback)  {
 
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)

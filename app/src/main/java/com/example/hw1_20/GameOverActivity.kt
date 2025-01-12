@@ -23,6 +23,16 @@ class GameOverActivity : AppCompatActivity() {
         val playAgainButton = findViewById<MaterialButton>(R.id.post_BTN_play_again)
         playAgainButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
+
+            // Retrieve and pass back the original settings
+            val refreshRate = intent.extras?.getLong("REFRESH_RATE", 1000L) ?: 1000L
+            val controlType = intent.extras?.getString("CONTROL_TYPE") ?: "BUTTONS"
+
+            val bundle = Bundle()
+            bundle.putLong("REFRESH_RATE", refreshRate)
+            bundle.putString("CONTROL_TYPE", controlType)
+            intent.putExtras(bundle)
+
             startActivity(intent)
             finish() // Close GameOverActivity
         }

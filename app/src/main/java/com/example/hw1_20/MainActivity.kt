@@ -5,41 +5,33 @@ import android.media.MediaPlayer
 import android.os.*
 import android.view.View
 import android.widget.GridLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
-import callbacks.TiltCallback
+import callbacks.GameUpdateCallback
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
+import logic.GameManager
+import callbacks.TiltCallback
 
-class MainActivity : AppCompatActivity(), TiltCallback {
+class MainActivity : AppCompatActivity(), GameUpdateCallback, TiltCallback {
+    private lateinit var gameManager: GameManager
 
-    // Constants
-    private val maxCol = 5
-    private val maxRow = 9
-
-    // UI Components
+    // Views
+    private lateinit var main_LBL_score_text: MaterialTextView
     private lateinit var gridLayout: GridLayout
     private lateinit var playerCells: List<AppCompatImageView>
     private lateinit var obstacleCells: Array<Array<AppCompatImageView>>
     private lateinit var prizesCells: Array<Array<AppCompatImageView>>
+    private lateinit var btnLeft: MaterialButton
+    private lateinit var btnRight: MaterialButton
 
-    // Game State
-    private var currentPlayerPosition = 2
-    private var score = 0
-    private lateinit var main_LBL_score_text: MaterialTextView
-    private var lives = 3
-    private var gameRunning = false
-    private var refreshRate = 1000L
 
-    // Control
-    private lateinit var tiltDetector: TiltDetector
+    // Game configuration
+    private val maxRow = 9
+    private val maxCol = 5
     private var isTiltControlEnabled = false
-
-    // Handler
-    private val handler = Handler(Looper.getMainLooper())
-    private var obstacleRefreshCount = 0
-    private var isPaused = false
+    private var tiltDetector: TiltDetector? = null
+    private var refreshRate = 1000L
 
     //sound
     private lateinit var hitSoundPlayer: MediaPlayer
@@ -48,45 +40,52 @@ class MainActivity : AppCompatActivity(), TiltCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Initialize the sound effect
-        hitSoundPlayer = MediaPlayer.create(this, R.raw.getting_hit)
+        // Get the settings from the intent
+        refreshRate = intent.getLongExtra("REFRESH_RATE", 1000L)
+        val controlType = intent.getStringExtra("CONTROL_TYPE") ?: "BUTTONS"
 
-        initializeGrid()
-        resetGame()
+        findViews()
+        initViews()
 
-        // Retrieve settings from intent
-        refreshRate = intent.extras?.getLong("REFRESH_RATE", 1000L) ?: 1000L
-        isTiltControlEnabled = intent.extras?.getString("CONTROL_TYPE", "BUTTONS") == "TILT"
 
-        if (isTiltControlEnabled) {
+
+        gameManager = GameManager(
+            maxRow = maxRow,
+            maxCol = maxCol,
+            obstacleCells = obstacleCells,
+            prizeCells = prizesCells,
+            playerCells = playerCells,
+            onGameUpdate = this,
+            hitSoundPlayer = hitSoundPlayer
+        )
+
+
+        isTiltControlEnabled = intent.getStringExtra("CONTROL_TYPE") == "TILT"
+
+        if (controlType == "TILT") {
             setupTiltControl()
         } else {
             setupButtonControl()
         }
 
-        startGameLoop()
+        gameManager.resetGame()
+        gameManager.startGameLoop(refreshRate)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (isTiltControlEnabled) {
-            tiltDetector.stop()
-        }
-        if (::hitSoundPlayer.isInitialized) {
-            hitSoundPlayer.release()
-        }
-    }
-
-    private fun initializeGrid() {
+    // Find all views
+    private fun findViews() {
+        main_LBL_score_text = findViewById(R.id.main_LBL_score_text)
         gridLayout = findViewById(R.id.grid_layout)
+        btnLeft = findViewById(R.id.main_BTN_left)
+        btnRight = findViewById(R.id.main_BTN_right)
 
-        // Initialize player cells
+        // Player cells
         playerCells = (0 until maxCol).map { col ->
             val id = resources.getIdentifier("player_cell_8_$col", "id", packageName)
             findViewById<AppCompatImageView>(id)
         }
 
-        // Initialize obstacle cells
+        // Obstacle cells
         obstacleCells = Array(maxRow) { row ->
             Array(maxCol) { col ->
                 val idOBS = resources.getIdentifier("cell_OBS_${row}_${col}", "id", packageName)
@@ -94,176 +93,81 @@ class MainActivity : AppCompatActivity(), TiltCallback {
             }
         }
 
-        // Initialize prizes cells
+        // Prize cells
         prizesCells = Array(maxRow) { row ->
             Array(maxCol) { col ->
                 val idPRZ = resources.getIdentifier("cell_PRZ_${row}_${col}", "id", packageName)
-                findViewById(idPRZ) ?: throw RuntimeException("OBS Cell ID for cell_${row}_${col} not found")
+                findViewById(idPRZ) ?: throw RuntimeException("PRZ Cell ID for cell_${row}_${col} not found")
             }
         }
     }
 
-    private fun resetGame() {
-        // Reset player position
-        currentPlayerPosition = 2
-        playerCells.forEachIndexed { index, cell ->
-            cell.visibility = if (index == currentPlayerPosition) View.VISIBLE else View.INVISIBLE
-        }
-
-        // Reset obstacles
-        obstacleCells.flatten().forEach { it.visibility = View.INVISIBLE }
-        prizesCells.flatten().forEach { it.visibility = View.INVISIBLE }
-
-        // Reset score and lives
-        score = 0
-        lives = 3
-        updateLives()
-        initscore()
-    }
-
-
-    private fun initscore(){
-        main_LBL_score_text = findViewById(R.id.main_LBL_score_text)
-    }
-
-    private fun setupButtonControl() {
-        findViewById<MaterialButton>(R.id.main_BTN_left).setOnClickListener { movePlayer("LEFT") }
-        findViewById<MaterialButton>(R.id.main_BTN_right).setOnClickListener { movePlayer("RIGHT") }
+    // Initialize views and set up event listeners
+    private fun initViews() {
+        btnLeft.setOnClickListener { gameManager.movePlayer("LEFT") }
+        btnRight.setOnClickListener { gameManager.movePlayer("RIGHT") }
+        // Initialize MediaPlayer
+        hitSoundPlayer = MediaPlayer.create(this, R.raw.getting_hit)
     }
 
     private fun setupTiltControl() {
-        findViewById<MaterialButton>(R.id.main_BTN_left).visibility = View.GONE
-        findViewById<MaterialButton>(R.id.main_BTN_right).visibility = View.GONE
-        tiltDetector = TiltDetector(this, this)
+        btnLeft.visibility = View.GONE
+        btnRight.visibility = View.GONE
+        val tiltDetector = TiltDetector(this, this)
         tiltDetector.start()
     }
 
     override fun tiltX(direction: String) {
-        if (isTiltControlEnabled) {
-            movePlayer(direction)
-        }
+        gameManager.movePlayer(direction)
     }
 
-    private fun movePlayer(direction: String) {
-        playerCells[currentPlayerPosition].visibility = View.INVISIBLE
-        when (direction) {
-            "LEFT" -> if (currentPlayerPosition > 0) currentPlayerPosition--
-            "RIGHT" -> if (currentPlayerPosition < maxCol - 1) currentPlayerPosition++
-        }
-        playerCells[currentPlayerPosition].visibility = View.VISIBLE
+    override fun onScoreUpdate(score: Int) {
+        main_LBL_score_text.text = score.toString()
     }
 
-    private fun startGameLoop() {
-        gameRunning = true
-        handler.post(object : Runnable {
-            override fun run() {
-                if (gameRunning) {
-                    if (obstacleRefreshCount < 1) {
-                        obstacleRefreshCount++
-                    } else {
-                        generateObstacles()
-                        generatePrizes()
-                        obstacleRefreshCount = 0
-                    }
-                    moveObstacles()
-                    movePrizes()
-                    checkCollision()
-                    updateScore()
-                    clearBottom()
-                    handler.postDelayed(this, refreshRate)
-                }
-            }
-        })
+    override fun onLivesUpdate(lives: Int) {
+        updateLivesUI(lives)
     }
 
-    override fun onPause() {
-        super.onPause()
-        gameRunning = false
-        handler.removeCallbacksAndMessages(null)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (!isPaused) {
-            Toast.makeText(this, "Resuming game...", Toast.LENGTH_SHORT).show()
-            handler.postDelayed({
-                isPaused = false
-                if (lives <= 0) endGame()
-                else startGameLoop()
-            }, 1000)
-        }
-    }
-
-    private fun endGame() {
-        onPause()
-        // Create an intent to start the GameOverActivity
+    override fun onGameOver(score: Int) {
         val intent = Intent(this, GameOverActivity::class.java)
-        intent.putExtra("SCORE", score) // Pass the score to the GameOverActivity
-        startActivity(intent)
 
-        // Finish the current activity to prevent returning to it
+        // Pass the current game settings to GameOverActivity
+        intent.putExtra("SCORE", score)
+        intent.putExtra("REFRESH_RATE", intent.getLongExtra("REFRESH_RATE", 1000L))
+        intent.putExtra("CONTROL_TYPE", intent.getStringExtra("CONTROL_TYPE"))
+
+        startActivity(intent)
         finish()
     }
 
-    private fun generateObstacles() {
-        val topRow = 0
-        val randomColumn = (0 until maxCol).random()
-        obstacleCells[topRow][randomColumn].visibility = View.VISIBLE
-    }
-
-    private fun generatePrizes() {
-        val topRow = 0
-        var randomColumn = (0 until maxCol).random()
-        // Can not have an obstacle and a prize on the same cell
-        while(obstacleCells[topRow][randomColumn].visibility == View.VISIBLE){
-            randomColumn = (0 until maxCol).random()
+    private fun setupButtonControl() {
+        // Ensure buttons are properly initialized
+        btnLeft.setOnClickListener {
+            gameManager.movePlayer("LEFT") // Move the player to the left
         }
-        prizesCells[topRow][randomColumn].visibility = View.VISIBLE
-    }
 
-    private fun moveObstacles() {
-        for (row in maxRow - 2 downTo 0) {
-            for (col in 0 until maxCol) {
-                val currentCell = obstacleCells[row][col]
-                val belowCell = obstacleCells[row + 1][col]
-
-                if (currentCell.visibility == View.VISIBLE) {
-                    currentCell.visibility = View.INVISIBLE
-                    belowCell.visibility = View.VISIBLE
-                }
-            }
+        btnRight.setOnClickListener {
+            gameManager.movePlayer("RIGHT") // Move the player to the right
         }
     }
 
-    private fun movePrizes() {
-        for (row in maxRow - 2 downTo 0) {
-            for (col in 0 until maxCol) {
-                val currentCell = prizesCells[row][col]
-                val belowCell = prizesCells[row + 1][col]
+    override fun onDestroy() {
+        super.onDestroy()
+        // Stop and release TiltDetector
+        if (isTiltControlEnabled) {
+            tiltDetector?.stop()
+            tiltDetector = null
+        }
 
-                if (currentCell.visibility == View.VISIBLE) {
-                    currentCell.visibility = View.INVISIBLE
-                    belowCell.visibility = View.VISIBLE
-                }
-            }
+        if (::hitSoundPlayer.isInitialized) {
+            hitSoundPlayer.release()
         }
     }
 
-    private fun checkCollision() {
-        if (obstacleCells[maxRow - 1][currentPlayerPosition].visibility == View.VISIBLE) {
-            lives--
-            updateLives()
-            playCrashEffect()
-            if (lives <= 0) endGame()
-        }
-    }
 
-    private fun clearBottom() {
-        obstacleCells[maxRow - 1].forEach { it.visibility = View.INVISIBLE }
-        prizesCells[maxRow - 1].forEach { it.visibility = View.INVISIBLE }
-    }
-
-    private fun updateLives() {
+    // Update lives UI based on remaining lives
+    private fun updateLivesUI(lives: Int) {
         listOf(
             R.id.main_IMG_heart1 to 1,
             R.id.main_IMG_heart2 to 2,
@@ -273,28 +177,5 @@ class MainActivity : AppCompatActivity(), TiltCallback {
                 if (lives >= threshold) View.VISIBLE else View.INVISIBLE
         }
     }
-
-    private fun updateScore() {
-        if (prizesCells[maxRow - 1][currentPlayerPosition].visibility == View.VISIBLE) {
-            score++
-            main_LBL_score_text.text = score.toString()
-        }
-    }
-
-    private fun playCrashEffect() {
-        if (::hitSoundPlayer.isInitialized) {
-            hitSoundPlayer.start() // Play the sound effect
-        }
-        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            (getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            getSystemService(VIBRATOR_SERVICE) as Vibrator
-        }
-        val vibrationEffect = VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)
-        vibrator.vibrate(vibrationEffect)
-
-
-    }
-
 }
+

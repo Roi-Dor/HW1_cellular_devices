@@ -17,7 +17,8 @@ Features:
 📱 User Experience
   Pause and resume the game seamlessly when the app loses focus or visibility.
   Intuitive pre-game setup with difficulty and control selection.
-
+  
+------------------------------------------------------------------------------------------------------
 
 Tech Stack:
 
@@ -29,6 +30,7 @@ Tech Stack:
     Google Maps SDK for Android
     Fused Location Provider API
 
+------------------------------------------------------------------------------------------------------
 
 How to Play:
 

@@ -8,7 +8,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import callbacks.ScoreClickListener
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -18,7 +17,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.button.MaterialButton
-import fragments.MapFragment
 import fragments.ScoresList
 import kotlin.properties.Delegates
 
@@ -32,6 +30,8 @@ class GameOverActivity : AppCompatActivity(), ScoreClickListener {
     private lateinit var googleMap: GoogleMap
     private var isMapReady = false
     private var currentMarker: Marker? = null // Keep track of the current marker
+    private var refreshRate: Long = 1000L
+    private var controlType: String = "BUTTONS"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +50,13 @@ class GameOverActivity : AppCompatActivity(), ScoreClickListener {
                 saveScore(currentScore, location)
             }
         }
+
+        // Retrieve the score and settings from the intent
+        val score = intent.getIntExtra("SCORE", 0)
+        refreshRate = intent.getLongExtra("REFRESH_RATE", 1000L)
+        controlType = intent.getStringExtra("CONTROL_TYPE") ?: "BUTTONS"
+
+        Toast.makeText(this, "Refresh: $refreshRate/nControls: $controlType" , Toast.LENGTH_SHORT).show()
 
         // Display the score
         val gameOverMessage = findViewById<TextView>(R.id.post_LBL_gameOver)
@@ -84,19 +91,7 @@ class GameOverActivity : AppCompatActivity(), ScoreClickListener {
         // Set up the "Play Again" button
         val playAgainButton = findViewById<MaterialButton>(R.id.post_BTN_play_again)
         playAgainButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-
-            // Retrieve and pass back the original settings
-            val refreshRate = intent.extras?.getLong("REFRESH_RATE", 1000L) ?: 1000L
-            val controlType = intent.extras?.getString("CONTROL_TYPE") ?: "BUTTONS"
-
-            val bundle = Bundle()
-            bundle.putLong("REFRESH_RATE", refreshRate)
-            bundle.putString("CONTROL_TYPE", controlType)
-            intent.putExtras(bundle)
-
-            startActivity(intent)
-            finish() // Close GameOverActivity
+            startNewGame()
         }
 
         // Set up the "Back to Menu" button
@@ -106,6 +101,14 @@ class GameOverActivity : AppCompatActivity(), ScoreClickListener {
             startActivity(intent)
             finish() // Close GameOverActivity
         }
+    }
+
+    private fun startNewGame() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("REFRESH_RATE", refreshRate)
+        intent.putExtra("CONTROL_TYPE", controlType)
+        startActivity(intent)
+        finish() // Close GameOverActivity
     }
 
     override fun onScoreSelected(location: Pair<Double, Double>) {

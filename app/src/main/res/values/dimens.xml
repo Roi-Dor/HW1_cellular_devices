@@ -9,8 +9,8 @@
     <dimen name="apple_height">0dp</dimen>
     <dimen name="player_width">0dp</dimen>
     <dimen name="player_height">0dp</dimen>
-    <dimen name="buttons_spacing">200dp</dimen>
-    <dimen name="buttons_height">0dp</dimen>
+    <dimen name="buttons_spacing">150dp</dimen>
+    <dimen name="buttons_height">16dp</dimen>
     <dimen name="menu_padding">100dp</dimen>
     <dimen name="menu_size">24sp</dimen>
     <dimen name="double_default">32dp</dimen>
@@ -19,4 +19,5 @@
     <dimen name="half_default_margin">8dp</dimen>
     <dimen name="quadruple_default_margin">64dp</dimen>
     <dimen name="menu_margin">50dp</dimen>
+    <dimen name="triple_default">48dp</dimen>
 </resources>

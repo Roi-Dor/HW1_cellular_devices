@@ -62,7 +62,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="@dimen/default_margin"
-        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginLeft="@dimen/triple_default"
         android:layout_marginRight="@dimen/default_margin"
         >
 

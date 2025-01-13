@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(), GameUpdateCallback, TiltCallback {
     private var isTiltControlEnabled = false
     private var tiltDetector: TiltDetector? = null
     private var refreshRate = 1000L
+    private var controlType = "BUTTONS"
 
     //sound
     private lateinit var hitSoundPlayer: MediaPlayer
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity(), GameUpdateCallback, TiltCallback {
 
         // Get the settings from the intent
         refreshRate = intent.getLongExtra("REFRESH_RATE", 1000L)
-        val controlType = intent.getStringExtra("CONTROL_TYPE") ?: "BUTTONS"
+        controlType = intent.getStringExtra("CONTROL_TYPE") ?: "BUTTONS"
 
         findViews()
         initViews()
@@ -132,10 +133,15 @@ class MainActivity : AppCompatActivity(), GameUpdateCallback, TiltCallback {
     override fun onGameOver(score: Int) {
         val intent = Intent(this, GameOverActivity::class.java)
 
-        // Pass the current game settings to GameOverActivity
-        intent.putExtra("SCORE", score)
-        intent.putExtra("REFRESH_RATE", intent.getLongExtra("REFRESH_RATE", 1000L))
-        intent.putExtra("CONTROL_TYPE", intent.getStringExtra("CONTROL_TYPE"))
+        // Create a Bundle to pass the data
+        val bundle = Bundle().apply {
+            putInt("SCORE", score)
+            putLong("REFRESH_RATE", refreshRate) // Pass refreshRate
+            putString("CONTROL_TYPE", controlType) // Pass controlType
+        }
+
+        // Attach the Bundle to the Intent
+        intent.putExtras(bundle)
 
         startActivity(intent)
         finish()

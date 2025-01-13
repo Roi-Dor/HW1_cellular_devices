@@ -171,7 +171,6 @@ class MainActivity : AppCompatActivity(), GameUpdateCallback, TiltCallback {
         }
     }
 
-
     // Update lives UI based on remaining lives
     private fun updateLivesUI(lives: Int) {
         listOf(

@@ -20,218 +20,173 @@ import com.google.android.material.button.MaterialButton
 import fragments.ScoresList
 import kotlin.properties.Delegates
 
-
-private lateinit var fusedLocationClient: FusedLocationProviderClient
-private var currentScore by Delegates.notNull<Int>()
-
-
 class GameOverActivity : AppCompatActivity(), ScoreClickListener {
 
+    // Map-related variables
     private lateinit var googleMap: GoogleMap
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var isMapReady = false
-    private var currentMarker: Marker? = null // Keep track of the current marker
+    private var currentMarker: Marker? = null
+
+    // Game settings and score
+    private var currentScore by Delegates.notNull<Int>()
     private var refreshRate: Long = 1000L
     private var controlType: String = "BUTTONS"
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_over)
 
-        // Retrieve the score from the bundle
-        currentScore = intent.extras?.getInt("SCORE") ?: 0
-
-        // Retrieve current location (for demonstration, using default coordinates)
+        // Initialize location services
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // Check if the score qualifies for the top 10 and save it if it does
+        // Retrieve data and set up UI
+        initializeData()
+        setupUI()
+        setupMapFragment()
+    }
+
+    // Retrieves data passed from the previous activity (score, settings) and saves the top score
+    private fun initializeData() {
+        val bundle = intent.extras
+        currentScore = bundle?.getInt("SCORE") ?: 0
+        refreshRate = bundle?.getLong("REFRESH_RATE", 1000L) ?: 1000L
+        controlType = bundle?.getString("CONTROL_TYPE", "BUTTONS") ?: "BUTTONS"
+
+        // Save the score with the current location if it's in the top 10
         getCurrentLocation { location ->
             if (isTop10Score(currentScore)) {
                 saveScore(currentScore, location)
             }
         }
+    }
 
-        // Retrieve the score and settings from the intent
-        val score = intent.getIntExtra("SCORE", 0)
-        refreshRate = intent.getLongExtra("REFRESH_RATE", 1000L)
-        controlType = intent.getStringExtra("CONTROL_TYPE") ?: "BUTTONS"
+    // Sets up buttons and adds the ScoresList fragment
+    private fun setupUI() {
+        // Display game over message with the score
+        findViewById<TextView>(R.id.post_LBL_gameOver).text = "Game Over\nYour Score: $currentScore"
 
-        Toast.makeText(this, "Refresh: $refreshRate/nControls: $controlType" , Toast.LENGTH_SHORT).show()
+        // Play again button: restart the game with the same settings
+        findViewById<MaterialButton>(R.id.post_BTN_play_again).setOnClickListener {
+            startNewGame()
+        }
 
-        // Display the score
-        val gameOverMessage = findViewById<TextView>(R.id.post_LBL_gameOver)
-        gameOverMessage.text = "Game Over\nYour Score: $currentScore"
+        // Back to menu button: return to the main menu
+        findViewById<MaterialButton>(R.id.post_BTN_back_to_menu).setOnClickListener {
+            val intent = Intent(this, PreGameActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
-        // Add the top_score fragment
+        // Add the ScoresList fragment to display top scores
         supportFragmentManager.beginTransaction()
             .replace(R.id.game_over_fragment_container, ScoresList())
             .commit()
+    }
 
-        // adding map fragment
+    // Initializes the map fragment and sets up the Google Map
+    private fun setupMapFragment() {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment_container) as? SupportMapFragment
         if (mapFragment == null) {
             val newMapFragment = SupportMapFragment.newInstance()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.map_fragment_container, newMapFragment)
                 .commit()
-            newMapFragment.getMapAsync { map ->
-                googleMap = map
-                googleMap.uiSettings.isZoomControlsEnabled = true
-                isMapReady = true // Set the flag when map is ready
-            }
+            newMapFragment.getMapAsync { setupGoogleMap(it) }
         } else {
-            mapFragment.getMapAsync { map ->
-                googleMap = map
-                googleMap.uiSettings.isZoomControlsEnabled = true
-                isMapReady = true
-            }
-        }
-
-
-        // Set up the "Play Again" button
-        val playAgainButton = findViewById<MaterialButton>(R.id.post_BTN_play_again)
-        playAgainButton.setOnClickListener {
-            startNewGame()
-        }
-
-        // Set up the "Back to Menu" button
-        val backToMenuButton = findViewById<MaterialButton>(R.id.post_BTN_back_to_menu)
-        backToMenuButton.setOnClickListener {
-            val intent = Intent(this, PreGameActivity::class.java)
-            startActivity(intent)
-            finish() // Close GameOverActivity
+            mapFragment.getMapAsync { setupGoogleMap(it) }
         }
     }
 
+    // Configures the Google Map when ready
+    private fun setupGoogleMap(map: GoogleMap) {
+        googleMap = map
+        googleMap.uiSettings.isZoomControlsEnabled = true
+        isMapReady = true
+    }
+
+    // Starts a new game with the same difficulty and control settings
     private fun startNewGame() {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("REFRESH_RATE", refreshRate)
-        intent.putExtra("CONTROL_TYPE", controlType)
-        startActivity(intent)
-        finish() // Close GameOverActivity
-    }
-
-    override fun onScoreSelected(location: Pair<Double, Double>) {
-        if (isMapReady) {
-            // Perform the map operation only if the map is ready
-            val latLng = com.google.android.gms.maps.model.LatLng(location.first, location.second)
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
-
-            // Add a new marker at the selected location
-            currentMarker = googleMap.addMarker(
-                MarkerOptions()
-                    .position(latLng)
-                    .title("Selected Location")
-            )
-        } else {
-            // Handle the case where the map is not ready (optional)
-            runOnUiThread {
-                Toast.makeText(this, "Map is not ready yet. Please try again.", Toast.LENGTH_SHORT).show()
-            }
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("REFRESH_RATE", refreshRate)
+            putExtra("CONTROL_TYPE", controlType)
         }
+        startActivity(intent)
+        finish()
     }
 
+    // Called when a score is selected from the list; zooms the map to the corresponding location
+    override fun onScoreSelected(location: Pair<Double, Double>) {
+        if (!isMapReady) {
+            Toast.makeText(this, "Map is not ready yet. Please try again.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val latLng = com.google.android.gms.maps.model.LatLng(location.first, location.second)
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+        currentMarker?.remove()
+        currentMarker = googleMap.addMarker(MarkerOptions().position(latLng).title("Selected Location"))
+    }
+
+    // Saves the top 10 scores with their corresponding locations
     private fun saveScore(score: Int, location: Pair<Double, Double>) {
         val sharedPreferences = getSharedPreferences("GameScores", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-        // Retrieve existing scores and locations
         val scores = sharedPreferences.getString("scores", "") ?: ""
         val locations = sharedPreferences.getString("locations", "") ?: ""
 
-        val scoreList = if (scores.isNotEmpty()) {
-            scores.split(",").map { it.toInt() }
-        } else {
-            emptyList()
+        val scoreList = scores.split(",").filter { it.isNotEmpty() }.map { it.toInt() }
+        val locationList = locations.split(";").filter { it.isNotEmpty() }.map {
+            val latLng = it.split(",")
+            Pair(latLng[0].toDouble(), latLng[1].toDouble())
         }
 
-        val locationList = if (locations.isNotEmpty()) {
-            locations.split(";").map { loc ->
-                val latLng = loc.split(",")
-                Pair(latLng[0].toDouble(), latLng[1].toDouble())
-            }
-        } else {
-            emptyList()
-        }
-
-        // Add the new score and location, then sort by score descending
+        // Merge the current score and location, keep only the top 10 scores
         val updatedList = (scoreList.zip(locationList) + (score to location))
             .sortedByDescending { it.first }
-            .take(10) // Keep only the top 10
+            .take(10)
 
         // Save updated scores and locations
-        val updatedScores = updatedList.map { it.first }
-        val updatedLocations = updatedList.map { "${it.second.first},${it.second.second}" }
-
-        editor.putString("scores", updatedScores.joinToString(","))
-        editor.putString("locations", updatedLocations.joinToString(";"))
+        editor.putString("scores", updatedList.joinToString(",") { it.first.toString() })
+        editor.putString("locations", updatedList.joinToString(";") { "${it.second.first},${it.second.second}" })
         editor.apply()
     }
 
+    // Checks if the current score qualifies for the top 10
     private fun isTop10Score(score: Int): Boolean {
-        val sharedPreferences = getSharedPreferences("GameScores", MODE_PRIVATE)
-        val scores = sharedPreferences.getString("scores", "") ?: ""
-        val scoreList = if (scores.isNotEmpty()) {
-            scores.split(",").map { it.toInt() }
-        } else {
-            emptyList()
+        val scores = getSharedPreferences("GameScores", MODE_PRIVATE).getString("scores", "") ?: ""
+        val scoreList = scores.split(",").filter { it.isNotEmpty() }.map { it.toInt() }
+        return scoreList.size < 10 || score > scoreList.minOrNull() ?: Int.MIN_VALUE
+    }
+
+    // Retrieves the current location, with a default fallback
+    private fun getCurrentLocation(onLocationReceived: (Pair<Double, Double>) -> Unit) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission()
+            return
         }
 
-        // Check if the score qualifies for the top 10
-        return if (scoreList.size < 10) {
-            true // Always qualifies if fewer than 10 scores
-        } else {
-            score > scoreList.minOrNull() ?: Int.MIN_VALUE
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            val currentLocation = location?.let { Pair(it.latitude, it.longitude) } ?: Pair(32.0853, 34.7818) // Default: Tel Aviv
+            onLocationReceived(currentLocation)
         }
     }
 
-    private fun checkLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
-        }
+    // Requests location permission from the user
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                // Call getCurrentLocation with a lambda to handle the location
-                getCurrentLocation { location ->
-                    // Handle the retrieved location here
-                    if (isTop10Score(currentScore)) { // Assuming `currentScore` is accessible here
-                        saveScore(currentScore, location)
-                    }
-                }
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getCurrentLocation { location ->
+                if (isTop10Score(currentScore)) saveScore(currentScore, location)
             }
         }
     }
 
     companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1 // Permission request code for location
     }
-
-    private fun getCurrentLocation(onLocationReceived: (Pair<Double, Double>) -> Unit) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    val currentLocation = Pair(location.latitude, location.longitude)
-                    onLocationReceived(currentLocation)
-                } else {
-                    // Fallback in case location is null
-                    val defaultLocation = Pair(32.0853, 34.7818) // Example: Tel Aviv
-                    onLocationReceived(defaultLocation)
-                }
-            }.addOnFailureListener {
-                // Handle failure (e.g., log error or show message)
-            }
-        } else {
-            checkLocationPermission()
-        }
-    }
-
-
 }

@@ -2,17 +2,13 @@ package com.example.hw1_20
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
 
 class PreGameActivity : AppCompatActivity() {
 
-    private var selectedDifficulty: Long? = null // Store the selected difficulty
-    private var selectedControl: String? = null // Store the selected control option
+    private var selectedDifficulty: Long? = null // Selected difficulty
+    private var selectedControl: String? = null // Selected control option
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,47 +16,50 @@ class PreGameActivity : AppCompatActivity() {
 
         val startGameButton = findViewById<MaterialButton>(R.id.pre_BTN_start)
 
-        // Difficulty selection
+        // Set difficulty listeners
+        setDifficultyListeners(startGameButton)
+
+        // Set control listeners
+        setControlListeners(startGameButton)
+
+        // Start game when both options are selected
+        startGameButton.setOnClickListener { startGame() }
+    }
+
+    private fun setDifficultyListeners(startGameButton: MaterialButton) {
         findViewById<MaterialButton>(R.id.pre_BTN_easy).setOnClickListener {
             selectedDifficulty = 1200L
             checkSelections(startGameButton)
         }
-
         findViewById<MaterialButton>(R.id.pre_BTN_medium).setOnClickListener {
             selectedDifficulty = 800L
             checkSelections(startGameButton)
         }
-
         findViewById<MaterialButton>(R.id.pre_BTN_hard).setOnClickListener {
             selectedDifficulty = 400L
             checkSelections(startGameButton)
         }
+    }
 
-        // Control selection
+    private fun setControlListeners(startGameButton: MaterialButton) {
         findViewById<MaterialButton>(R.id.pre_BTN_buttonControl).setOnClickListener {
             selectedControl = "BUTTONS"
             checkSelections(startGameButton)
         }
-
         findViewById<MaterialButton>(R.id.pre_BTN_tiltControl).setOnClickListener {
             selectedControl = "TILT"
             checkSelections(startGameButton)
         }
-
-        findViewById<AppCompatImageView>(R.id.pre_IMG_background_tree)
-
-        // Start game
-        startGameButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            val bundle = Bundle()
-            selectedDifficulty?.let { bundle.putLong("REFRESH_RATE", it) }
-            selectedControl?.let { bundle.putString("CONTROL_TYPE", it) }
-            intent.putExtras(bundle)
-            startActivity(intent)
-        }
     }
 
-    // Enable "Start Game" button only when both options are selected
+    private fun startGame() {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("REFRESH_RATE", selectedDifficulty)
+            putExtra("CONTROL_TYPE", selectedControl)
+        }
+        startActivity(intent)
+    }
+
     private fun checkSelections(startGameButton: MaterialButton) {
         startGameButton.isEnabled = selectedDifficulty != null && selectedControl != null
     }
